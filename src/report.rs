@@ -1,9 +1,10 @@
+use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 
 pub use super::{Error, ReportAuthorizationKey, TemporaryContactKey, TemporaryContactNumber};
 
 /// Describes the intended type of the contents of a memo field.
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum MemoType {
     /// The CoEpi symptom self-report format, version 1 (TBD)
@@ -15,7 +16,7 @@ pub enum MemoType {
 }
 
 /// A report of potential exposure.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Report {
     pub(crate) rvk: ed25519_zebra::PublicKeyBytes,
     pub(crate) tck_bytes: [u8; 32],
@@ -115,7 +116,7 @@ impl ReportAuthorizationKey {
 }
 
 /// A signed exposure report, whose source integrity can be verified to produce a `Report`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SignedReport {
     pub(crate) report: Report,
     pub(crate) sig: ed25519_zebra::Signature,

@@ -1,4 +1,5 @@
 use rand_core::{CryptoRng, RngCore};
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 pub use super::Error;
@@ -7,7 +8,7 @@ const H_TCK_DOMAIN_SEP: &[u8; 5] = b"H_TCK";
 const H_TCN_DOMAIN_SEP: &[u8; 5] = b"H_TCN";
 
 /// Authorizes publication of a report of potential exposure.
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct ReportAuthorizationKey {
     // We don't store rvk explicitly because it's cached inside the SecretKey.
     pub(crate) rak: ed25519_zebra::SecretKey,
@@ -55,11 +56,11 @@ impl ReportAuthorizationKey {
 }
 
 /// A pseudorandom 128-bit value broadcast to nearby devices over Bluetooth.
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub struct TemporaryContactNumber(pub [u8; 16]);
 
 /// A ratcheting key used to derive temporary contact numbers.
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct TemporaryContactKey {
     pub(crate) index: u16,
     pub(crate) rvk: ed25519_zebra::PublicKeyBytes,
