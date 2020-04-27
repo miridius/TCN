@@ -18,13 +18,19 @@ pub enum MemoType {
 /// A report of potential exposure.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Report {
-    pub(crate) rvk: ed25519_zebra::PublicKeyBytes,
-    pub(crate) tck_bytes: [u8; 32],
-    // Invariant: j_1 > 0.
-    pub(crate) j_1: u16,
-    pub(crate) j_2: u16,
-    pub(crate) memo_type: MemoType,
-    pub(crate) memo_data: Vec<u8>,
+    /// Report verification (public) key as a byte array
+    pub rvk: ed25519_zebra::PublicKeyBytes,
+    /// Temporary contact key as a byte array
+    pub tck_bytes: [u8; 32],
+    /// Index of the first TCN to disclose
+    /// Invariant: j_1 > 0.
+    pub j_1: u16,
+    /// Index of the last TCN to check
+    pub j_2: u16,
+    /// The memo type
+    pub memo_type: MemoType,
+    /// The memo data as a byte vector
+    pub memo_data: Vec<u8>,
 }
 
 impl Report {
@@ -118,8 +124,10 @@ impl ReportAuthorizationKey {
 /// A signed exposure report, whose source integrity can be verified to produce a `Report`.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SignedReport {
-    pub(crate) report: Report,
-    pub(crate) sig: ed25519_zebra::Signature,
+    /// A report of potential exposure
+    pub report: Report,
+    /// Cryptographic signature to verify the report against
+    pub sig: ed25519_zebra::Signature,
 }
 
 impl SignedReport {
